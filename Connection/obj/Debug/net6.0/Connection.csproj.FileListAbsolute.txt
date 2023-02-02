@@ -1,0 +1,14 @@
+C:\Users\oscar\source\repos\oscarjesus93\GraphApi\Connection\bin\Debug\net6.0\Connection.deps.json
+C:\Users\oscar\source\repos\oscarjesus93\GraphApi\Connection\bin\Debug\net6.0\Connection.dll
+C:\Users\oscar\source\repos\oscarjesus93\GraphApi\Connection\bin\Debug\net6.0\Connection.pdb
+C:\Users\oscar\source\repos\oscarjesus93\GraphApi\Connection\obj\Debug\net6.0\Connection.csproj.AssemblyReference.cache
+C:\Users\oscar\source\repos\oscarjesus93\GraphApi\Connection\obj\Debug\net6.0\Connection.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\oscar\source\repos\oscarjesus93\GraphApi\Connection\obj\Debug\net6.0\Connection.AssemblyInfoInputs.cache
+C:\Users\oscar\source\repos\oscarjesus93\GraphApi\Connection\obj\Debug\net6.0\Connection.AssemblyInfo.cs
+C:\Users\oscar\source\repos\oscarjesus93\GraphApi\Connection\obj\Debug\net6.0\Connection.csproj.CoreCompileInputs.cache
+C:\Users\oscar\source\repos\oscarjesus93\GraphApi\Connection\obj\Debug\net6.0\Connection.dll
+C:\Users\oscar\source\repos\oscarjesus93\GraphApi\Connection\obj\Debug\net6.0\refint\Connection.dll
+C:\Users\oscar\source\repos\oscarjesus93\GraphApi\Connection\obj\Debug\net6.0\Connection.pdb
+C:\Users\oscar\source\repos\oscarjesus93\GraphApi\Connection\obj\Debug\net6.0\ref\Connection.dll
+C:\Users\oscar\source\repos\oscarjesus93\GraphApi\Connection\bin\Debug\net6.0\Connection.runtimeconfig.json
+C:\Users\oscar\source\repos\oscarjesus93\GraphApi\Connection\obj\Debug\net6.0\Connection.genruntimeconfig.cache
