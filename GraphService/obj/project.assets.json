@@ -2931,6 +2931,10 @@
       "GraphCache/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v6.0",
+        "dependencies": {
+          "Microsoft.Extensions.Caching.Abstractions": "6.0.0",
+          "devVzla.Utils": "5.0.1"
+        },
         "compile": {
           "bin/placeholder/GraphCache.dll": {}
         },
