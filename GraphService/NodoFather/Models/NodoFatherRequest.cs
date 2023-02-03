@@ -17,7 +17,7 @@ namespace GraphService.NodoFather.Models
                 return new SqlParameter("@title", tittle);
             }
 
-            protected SqlParameter GetParameterId(int id)
+            protected static SqlParameter GetParameterId(int id)
             {
                 return new SqlParameter("@id", id);
             }
@@ -43,7 +43,7 @@ namespace GraphService.NodoFather.Models
         {
             public (string spUpdate, SqlParameter[]parameters ) MapToSqlParameters(int id) {
 
-                string sql = $"[SP_NODO_FATHER_UPDATE] " +
+                string sql = $"SP_NODO_FATHER_UPDATE " +
                                  $"@id ," +
                                  $"@title";
 
@@ -59,7 +59,7 @@ namespace GraphService.NodoFather.Models
 
         public sealed class NodoFatherRequestDelete : Base
         {
-            public (string spDelete, SqlParameter[] parameters) MapToSqlParameters(int id)
+            public static (string spDelete, SqlParameter[] parameters) MapToSqlParameters(int id)
             {
 
                 string sql = $"[SP_NODO_FATHER_DELETE] " +
@@ -68,7 +68,7 @@ namespace GraphService.NodoFather.Models
 
                 SqlParameter[] parameters = new[]
                 {
-                     GetParameterId(id)
+                      GetParameterId(id)
                 };
 
                 return (sql, parameters);

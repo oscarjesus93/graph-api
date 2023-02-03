@@ -1,7 +1,9 @@
 ﻿
+using Azure;
 using GraphService.NodoFather.Models;
 using GraphService.NodoFather.Service;
 using GraphService.Response;
+using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -24,8 +26,66 @@ namespace GraphApi.Controllers.NodoFather
             _logger = logger;
         }
 
+        [HttpGet]
+        public async Task<ActionResult<ResponseGeneric>> Get()
+        {
+            List<ResponseGeneric> response = new List<ResponseGeneric>();
+
+            try
+            {
+                List<NodoFatherDTO> nodoFathers = await _service.GetList();
+
+                foreach(NodoFatherDTO nodo in nodoFathers)
+                {
+                    ResponseGeneric generic = new ResponseGeneric();
+                    generic.ParseNodoFather(nodo);
+                    response.Add(generic);
+                }
+
+            }
+            catch (EntityException entEx)
+            {
+                
+                _logger.LogWarning($"Message: {entEx.Message}");
+                return BadRequest(new { message = entEx.Message });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Message: {ex.Message}");
+                return Problem(ex.Message);
+            }
+
+            return Ok(response);
+        }
+
+        public async Task<ActionResult<ResponseGeneric>> Get(int id)
+        {
+            ResponseGeneric response = new ResponseGeneric();
+
+            try
+            {
+                NodoFatherDTO nodoFathers = await _service.Get(id);
+
+                response.ParseNodoFather(nodoFathers);
+
+            }
+            catch (EntityException entEx)
+            {                
+                _logger.LogWarning($"Message: {entEx.Message}");
+                return BadRequest(new { message = entEx.Message });
+            }
+            catch (Exception ex)
+            {                
+                _logger.LogError($"Message: {ex.Message}");
+                return Problem(ex.Message);
+            }
+
+            return Ok(response);
+        }
+
+
         [HttpPost]
-        public ActionResult<ResponseGeneric> Post(NodoFatherRequest.NodoFatherRequestPost request)
+        public ActionResult<ResponseGeneric> Post([FromBody] NodoFatherRequest.NodoFatherRequestPost request)
         {
             if (!ModelState.IsValid)
             {
@@ -43,8 +103,52 @@ namespace GraphApi.Controllers.NodoFather
 
             }
             catch (SPValidationException sqlEx)
-            {
+            {               
                 string jsonRequest = JsonConvert.SerializeObject(request);               
+                _logger.LogWarning($"Message: {sqlEx.Message}");
+                _logger.LogWarning($"Json = {jsonRequest}");
+
+                return BadRequest(new { message = sqlEx.Message });
+            }
+            catch (SPErrorException sqlEx)
+            {
+                string jsonRequest = JsonConvert.SerializeObject(request);
+                _logger.LogWarning($"Message: {sqlEx.Message}");
+                _logger.LogWarning($"Json = {jsonRequest}");
+                return BadRequest(new { message = sqlEx.Message });
+            }
+            catch (Exception ex)
+            {
+                string jsonRequest = JsonConvert.SerializeObject(request);
+                _logger.LogWarning($"Message: {ex.Message}");
+                _logger.LogWarning($"Json = {jsonRequest}");
+                return Problem(ex.Message);
+            }
+
+            return Ok(response);
+        }
+
+        [HttpPut("{id}")]
+        public ActionResult<ResponseGeneric> Put([FromBody] NodoFatherRequest.NodoFatherRequestPut request, int id)
+        {
+            if (!ModelState.IsValid)
+            {
+                string ModelStateJson = JsonConvert.SerializeObject(ModelState);
+                _logger.LogWarning(ModelStateJson);
+                return BadRequest(ModelState);
+            }
+
+            ResponseGeneric response = new ResponseGeneric();
+
+            try
+            {
+                NodoFatherDTO nodoFather = _service.Update(request, id);
+                response.ParseNodoFather(nodoFather);
+
+            }
+            catch (SPValidationException sqlEx)
+            {
+                string jsonRequest = JsonConvert.SerializeObject(request);
                 _logger.LogWarning($"Message: {sqlEx.Message}");
                 _logger.LogWarning($"Json = {jsonRequest}");
 
@@ -67,5 +171,41 @@ namespace GraphApi.Controllers.NodoFather
 
             return Ok(response);
         }
+
+        [HttpDelete("{id}")]
+        public ActionResult Delete(int id)
+        {
+            if (!ModelState.IsValid)
+            {
+                string ModelStateJson = JsonConvert.SerializeObject(ModelState);
+                _logger.LogWarning(ModelStateJson);
+                return BadRequest(ModelState);
+            }
+            
+
+            try
+            {
+                _service.Delete(id);              
+
+            }
+            catch (SPValidationException sqlEx)
+            {
+
+                _logger.LogWarning($"Message: {sqlEx.Message}");
+                return BadRequest(sqlEx.Message);
+            }
+            catch (SPErrorException sqlEx)
+            {
+                _logger.LogWarning($"Message: {sqlEx.Message}");
+                return Problem(sqlEx.Message);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning($"Message: {ex.Message}");
+                return Problem(ex.Message);
+            }
+
+            return Ok();
+        }        
     }
 }
