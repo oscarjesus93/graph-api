@@ -1,5 +1,7 @@
 ﻿using Connection;
 using GraphCache;
+using GraphService.NodoChild.Models;
+using GraphService.NodoChild.Service;
 using GraphService.NodoFather.Models;
 using GraphService.NodoFather.Service;
 using Microsoft.EntityFrameworkCore;
@@ -37,9 +39,11 @@ namespace GraphApi
 
             //SERVICE
             services.AddScoped<INodoFatherService, NodoFatherService>();
+            services.AddScoped<INodoChildService, NodoChildService>();
 
             //CACHE
             services.AddScoped<ICache<NodoFatherDTO>, NodoFatherCache<NodoFatherDTO>>();
+            services.AddScoped<ICache<NodoChildDTO>, NodoChildCache<NodoChildDTO>>();
             services.AddMemoryCache();            
         }
 

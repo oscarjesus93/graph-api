@@ -17,7 +17,7 @@ namespace GraphService.NodoFather.Service
         private readonly Func<NodoFatherEntity, NodoFatherDTO> singleSelect = NodoFatherDTO.singleSelect;
         private readonly ICache<NodoFatherDTO> cache;
         
-        public NodoFatherService(ConnectionContext _connectionContext, IHttpContextAccessor httpcontextAccessor, ICache<NodoFatherDTO> _cache)
+        public NodoFatherService(ConnectionContext _connectionContext, ICache<NodoFatherDTO> _cache)
         {
             _nodoFatherRepo = _connectionContext.nodoFatherEntities;
             connectionContext= _connectionContext;

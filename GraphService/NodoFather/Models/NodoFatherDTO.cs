@@ -6,7 +6,6 @@ namespace GraphService.NodoFather.Models
     public class NodoFatherDTO : IMap<NodoFatherEntity>
     {
         public int id { get; set; }
-        public int parent { get; set; }
         public string title { get; set; }
         public DateTime? created_at { get; set; }
 

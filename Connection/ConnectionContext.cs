@@ -21,8 +21,8 @@ namespace Connection
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<NodoFatherEntity>();
-            modelBuilder.Entity<NodoChildEntity>();
+            modelBuilder.Entity<NodoFatherEntity>(_NodoFatherBuilder);
+            modelBuilder.Entity<NodoChildEntity>(_NodoChildBuilder);
         }
     }
 }

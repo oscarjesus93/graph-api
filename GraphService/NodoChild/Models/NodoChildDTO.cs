@@ -1,5 +1,6 @@
 ﻿
 using Connection.NodoChildrenEntities;
+using GraphService.NodoFather.Models;
 using Utils.Interfaces.Map;
 
 namespace GraphService.NodoChild.Models
@@ -9,6 +10,8 @@ namespace GraphService.NodoChild.Models
 
         public int id { get; set; }
         public int parent { get; set; }
+
+        public NodoFatherDTO nodoFatherDTO { get; set; }
         public string title { get; set; }
         public DateTime? created_at { get; set; }
 
@@ -40,6 +43,11 @@ namespace GraphService.NodoChild.Models
             parent = entity.Parent;
             title = entity.Title;
             created_at = entity.CreatedAt;
+        }
+
+        public void MapNodoFather(NodoFatherDTO nodo)
+        {
+            nodoFatherDTO = nodo;
         }
     }
 }
