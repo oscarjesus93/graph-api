@@ -1,7 +1,10 @@
 ﻿using Connection;
+using GraphCache;
+using GraphService.NodoFather.Models;
+using GraphService.NodoFather.Service;
 using Microsoft.EntityFrameworkCore;
 using MSSettings;
-
+using Utils.Interfaces.Cache;
 
 namespace GraphApi
 {
@@ -32,6 +35,11 @@ namespace GraphApi
             //i18n
             services.AddI18N();
 
+            //SERVICE
+            services.AddScoped<INodoFatherService, NodoFatherService>();
+
+            //CACHE
+            services.AddScoped<ICache<NodoFatherDTO>, NodoFatherCache<NodoFatherDTO>>();
             services.AddMemoryCache();            
         }
 
