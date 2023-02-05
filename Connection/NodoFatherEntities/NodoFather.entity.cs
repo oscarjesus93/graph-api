@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Connection.NodoFatherEntities
 {
@@ -11,10 +12,11 @@ namespace Connection.NodoFatherEntities
         [Key]
         [Column("id")]
         public int Id { get; set; }
+
         [Column("title")]
         [StringLength(150)]
         public string Title { get; set; } = null!;
-        [Column("created_at", TypeName = "datetime")]
+        [Column("created_at", TypeName = "datetime")]        
         public DateTime CreatedAt { get; set; }
 
         public static Action<EntityTypeBuilder<NodoFatherEntity>> NodoFatherBuilder = entity =>

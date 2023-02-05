@@ -27,13 +27,13 @@ namespace GraphApi.Controllers.NodoFather
         }
 
         [HttpGet]
-        public async Task<ActionResult<ResponseGeneric>> Get()
+        public async Task<ActionResult<ResponseGeneric>> Get([FromHeader(Name = "idioma")] string value)
         {
             List<ResponseGeneric> response = new List<ResponseGeneric>();
 
             try
             {
-                List<NodoFatherDTO> nodoFathers = await _service.GetList();
+                List<NodoFatherDTO> nodoFathers = await _service.GetList(value);
 
                 foreach(NodoFatherDTO nodo in nodoFathers)
                 {
@@ -59,13 +59,15 @@ namespace GraphApi.Controllers.NodoFather
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<ResponseGeneric>> Get(int id)
+        public async Task<ActionResult<ResponseGeneric>> Get(
+            [FromHeader(Name = "idioma")] string value, 
+            int id)
         {
             ResponseGeneric response = new ResponseGeneric();
 
             try
             {
-                NodoFatherDTO nodoFathers = await _service.Get(id);
+                NodoFatherDTO nodoFathers = await _service.Get(id, value);
 
                 response.ParseNodoFather(nodoFathers);
 
@@ -85,8 +87,8 @@ namespace GraphApi.Controllers.NodoFather
         }
 
 
-        [HttpPost]
-        public ActionResult<ResponseGeneric> Post([FromBody] NodoFatherRequest.NodoFatherRequestPost request)
+        [HttpPost]        
+        public ActionResult<ResponseGeneric> Post([FromHeader(Name = "idioma")] string value)
         {
             if (!ModelState.IsValid)
             {
@@ -99,30 +101,23 @@ namespace GraphApi.Controllers.NodoFather
 
             try
             {
-                NodoFatherDTO nodoFather = _service.Create(request);
+                NodoFatherDTO nodoFather = _service.Create(new NodoFatherRequest.NodoFatherRequestPost(), value);
                 response.ParseNodoFather(nodoFather);
 
             }
             catch (SPValidationException sqlEx)
             {               
-                string jsonRequest = JsonConvert.SerializeObject(request);               
                 _logger.LogWarning($"Message: {sqlEx.Message}");
-                _logger.LogWarning($"Json = {jsonRequest}");
-
                 return BadRequest(new { message = sqlEx.Message });
             }
             catch (SPErrorException sqlEx)
             {
-                string jsonRequest = JsonConvert.SerializeObject(request);
                 _logger.LogWarning($"Message: {sqlEx.Message}");
-                _logger.LogWarning($"Json = {jsonRequest}");
                 return BadRequest(new { message = sqlEx.Message });
             }
             catch (Exception ex)
             {
-                string jsonRequest = JsonConvert.SerializeObject(request);
                 _logger.LogWarning($"Message: {ex.Message}");
-                _logger.LogWarning($"Json = {jsonRequest}");
                 return Problem(ex.Message);
             }
 
@@ -130,7 +125,7 @@ namespace GraphApi.Controllers.NodoFather
         }
 
         [HttpPut("{id}")]
-        public ActionResult<ResponseGeneric> Put([FromBody] NodoFatherRequest.NodoFatherRequestPut request, int id)
+        public ActionResult<ResponseGeneric> Put([FromHeader(Name = "idioma")] string value, [FromBody] NodoFatherRequest.NodoFatherRequestPut request, int id)
         {
             if (!ModelState.IsValid)
             {
@@ -143,7 +138,7 @@ namespace GraphApi.Controllers.NodoFather
 
             try
             {
-                NodoFatherDTO nodoFather = _service.Update(request, id);
+                NodoFatherDTO nodoFather = _service.Update(request, id, value);
                 response.ParseNodoFather(nodoFather);
 
             }

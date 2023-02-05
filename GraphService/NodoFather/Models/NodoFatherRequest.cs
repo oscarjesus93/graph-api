@@ -8,14 +8,7 @@ namespace GraphService.NodoFather.Models
     {
 
         public abstract class Base
-        {
-            [DescriptionValidations(maxLength: 150, required: true)]
-            public string tittle { get; set; }
-
-            protected SqlParameter GetTitleParameter()
-            {
-                return new SqlParameter("@title", tittle);
-            }
+        {           
 
             protected static SqlParameter GetParameterId(int id)
             {
@@ -25,22 +18,24 @@ namespace GraphService.NodoFather.Models
 
         public sealed class NodoFatherRequestPost : Base 
         { 
-            public (string spInsert, SqlParameter[] sqlParameters) MapToSqlParameters()
+            public string MapToSqlParameters()
             {
-                string sql = $"SP_NODO_FATHER_INSERT " +
-                                    "@title";
+                string sql = $"SP_NODO_FATHER_INSERT ";
 
-                SqlParameter[] parameters = new[]
-                {
-                    GetTitleParameter()
-                };
-
-                return (sql, parameters);
+                return sql;
             }
         }
 
         public sealed class NodoFatherRequestPut : Base
         {
+            [DescriptionValidations(maxLength: 150)]
+            public string tittle { get; set; }
+
+            protected SqlParameter GetTitleParameter()
+            {
+                return new SqlParameter("@title", tittle);
+            }
+
             public (string spUpdate, SqlParameter[]parameters ) MapToSqlParameters(int id) {
 
                 string sql = $"SP_NODO_FATHER_UPDATE " +
