@@ -69,7 +69,7 @@ namespace GraphService.NodoChild.Service
 
         public async Task<NodoChildDTO> Get(int id, string language)
         {
-            NodoChildEntity entity = await nodoChildRepo.Where(op => op.Id == id).FirstAsync();
+            NodoChildEntity entity = await nodoChildRepo.Where(op => op.Id == id).FirstOrDefaultAsync();
 
             if (entity == null)
             {

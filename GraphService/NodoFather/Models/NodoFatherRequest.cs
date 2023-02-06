@@ -29,11 +29,11 @@ namespace GraphService.NodoFather.Models
         public sealed class NodoFatherRequestPut : Base
         {
             [DescriptionValidations(maxLength: 150)]
-            public string tittle { get; set; }
+            public string title { get; set; }
 
             protected SqlParameter GetTitleParameter()
             {
-                return new SqlParameter("@title", tittle);
+                return new SqlParameter("@title", title);
             }
 
             public (string spUpdate, SqlParameter[]parameters ) MapToSqlParameters(int id) {
@@ -58,8 +58,7 @@ namespace GraphService.NodoFather.Models
             {
 
                 string sql = $"[SP_NODO_FATHER_DELETE] " +
-                                 $"@id ," +
-                                 $"@title";
+                                 $"@id";
 
                 SqlParameter[] parameters = new[]
                 {

@@ -167,7 +167,7 @@ namespace GraphApi.Controllers.NodoChild
         }
 
         [HttpDelete("{id}")]
-        public ActionResult<ResponseNodoChild> Delete(int id)
+        public ActionResult<ResponseNodoChild> Delete( int id)
         {
             if (!ModelState.IsValid)
             {
