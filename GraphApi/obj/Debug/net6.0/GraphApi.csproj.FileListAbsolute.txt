@@ -131,3 +131,10 @@ C:\Users\oscar\source\repos\oscarjesus93\GraphApi\GraphApi\bin\Debug\net6.0\runt
 C:\Users\oscar\source\repos\oscarjesus93\GraphApi\GraphApi\bin\Debug\net6.0\runtimes\win\lib\netcoreapp2.1\System.Data.SqlClient.dll
 C:\Users\oscar\source\repos\oscarjesus93\GraphApi\GraphApi\bin\Debug\net6.0\Connection.dll
 C:\Users\oscar\source\repos\oscarjesus93\GraphApi\GraphApi\bin\Debug\net6.0\Connection.pdb
+C:\Users\oscar\source\repos\oscarjesus93\GraphApi\GraphApi\bin\Debug\net6.0\Utils.dll
+C:\Users\oscar\source\repos\oscarjesus93\GraphApi\GraphApi\bin\Debug\net6.0\Microsoft.Extensions.Localization.dll
+C:\Users\oscar\source\repos\oscarjesus93\GraphApi\GraphApi\bin\Debug\net6.0\Microsoft.Extensions.Localization.Abstractions.dll
+C:\Users\oscar\source\repos\oscarjesus93\GraphApi\GraphApi\bin\Debug\net6.0\GraphCache.dll
+C:\Users\oscar\source\repos\oscarjesus93\GraphApi\GraphApi\bin\Debug\net6.0\GraphService.dll
+C:\Users\oscar\source\repos\oscarjesus93\GraphApi\GraphApi\bin\Debug\net6.0\GraphCache.pdb
+C:\Users\oscar\source\repos\oscarjesus93\GraphApi\GraphApi\bin\Debug\net6.0\GraphService.pdb

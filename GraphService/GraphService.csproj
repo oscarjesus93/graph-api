@@ -6,4 +6,13 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="devVzla.Utils" Version="5.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Connection\Connection.csproj" />
+    <ProjectReference Include="..\GraphCache\GraphCache.csproj" />
+  </ItemGroup> 
+
 </Project>

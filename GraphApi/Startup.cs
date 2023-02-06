@@ -1,7 +1,12 @@
 ﻿using Connection;
+using GraphCache;
+using GraphService.NodoChild.Models;
+using GraphService.NodoChild.Service;
+using GraphService.NodoFather.Models;
+using GraphService.NodoFather.Service;
 using Microsoft.EntityFrameworkCore;
 using MSSettings;
-
+using Utils.Interfaces.Cache;
 
 namespace GraphApi
 {
@@ -19,7 +24,6 @@ namespace GraphApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
             strConnection = Configuration.GetConnectionString("BD").ToString() ?? "";
             services.AddDbContext<ConnectionContext>(opt => opt.UseSqlServer(strConnection));
             services.AddSwagger("Graph Service v1", "Graph Service", "v1");
@@ -32,6 +36,13 @@ namespace GraphApi
             //i18n
             services.AddI18N();
 
+            //SERVICE
+            services.AddScoped<INodoFatherService, NodoFatherService>();
+            services.AddScoped<INodoChildService, NodoChildService>();
+
+            //CACHE
+            services.AddScoped<ICache<NodoFatherDTO>, NodoFatherCache<NodoFatherDTO>>();
+            services.AddScoped<ICache<NodoChildDTO>, NodoChildCache<NodoChildDTO>>();
             services.AddMemoryCache();            
         }
 

@@ -13,6 +13,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Connection\Connection.csproj" />
+    <ProjectReference Include="..\GraphCache\GraphCache.csproj" />
+    <ProjectReference Include="..\GraphService\GraphService.csproj" />
   </ItemGroup>
 
 </Project>
