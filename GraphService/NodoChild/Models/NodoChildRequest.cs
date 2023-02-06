@@ -72,11 +72,11 @@ namespace GraphService.NodoChild.Models
             public static (string spInsert, SqlParameter[] sqlParameters) MapToSqlParameters(int id)
             {
                 string sql = $"SP_NODO_CHILD_DELETE  " +
-                                         $"@id, ";
+                                         $"@id";
 
                 SqlParameter[] parameters = new[]
                 {
-                    GetParameterId(id)
+                    GetParameterId(id)                   
                 };
 
                 return (sql, parameters);
