@@ -5,7 +5,7 @@ using Connection.NodoChildrenEntities;
 using Connection.NodoFatherEntities;
 using GraphService.NodoChild.Models;
 using GraphService.NodoFather.Models;
-using GraphService.NodoFather.Service;
+using GraphService.Resource;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
@@ -22,17 +22,20 @@ namespace GraphService.NodoChild.Service
         private readonly ConnectionContext connectionContext;
         private readonly Func<NodoChildEntity, NodoChildDTO> singleSelect = NodoChildDTO.singleSelect;
         private readonly ICache<NodoChildDTO> _cache;
-
+        private readonly ResourceInfo _resourceInfo;
+        private readonly string[] numeros;
 
         public NodoChildService(ConnectionContext _connectionContext, IHttpContextAccessor httpcontextAccessor, ICache<NodoChildDTO> cache)
         {
             nodoChildRepo = _connectionContext.nodoChildEntities;
             nodoFatherRepo = _connectionContext.nodoFatherEntities;
             connectionContext = _connectionContext;
+            _resourceInfo = new ResourceInfo();
             _cache = cache;
+            numeros = _resourceInfo.numberEnglish.Split(",");
         }
 
-        public async Task<List<NodoChildDTO>> GetAll()
+        public async Task<List<NodoChildDTO>> GetAll(string language)
         {
             List<NodoChildDTO> nodoChildrenCache = _cache.Find();
 
@@ -48,6 +51,14 @@ namespace GraphService.NodoChild.Service
 
                 List<NodoChildDTO> nodoChildren = nodoChildEntities.Select(singleSelect).ToList();
 
+                if(language.ToUpper() == "EN")
+                {
+                    foreach(NodoChildDTO nodo in nodoChildren)
+                    {
+                        nodo.title = numeros[(nodo.id - 1)].Trim();
+                    }
+                }
+
                 _cache.Set(nodoChildren);
 
                 return nodoChildren;
@@ -56,7 +67,7 @@ namespace GraphService.NodoChild.Service
             return nodoChildrenCache;
         }
 
-        public async Task<NodoChildDTO> Get(int id)
+        public async Task<NodoChildDTO> Get(int id, string language)
         {
             NodoChildEntity entity = await nodoChildRepo.Where(op => op.Id == id).FirstAsync();
 
@@ -73,10 +84,40 @@ namespace GraphService.NodoChild.Service
             NodoChildDTO nodo = new NodoChildDTO(entity);
             nodo.MapNodoFather(nodoFather);
 
+            if(language == "EN")
+            {
+                nodo.title = numeros[(nodo.id - 1)].Trim();
+            }
+
             return nodo;
         }
 
-        public NodoChildDTO Create(NodoChildRequest.NodoChildRequestPost request)
+        public async Task<List<NodoChildResume>> GetAllParent(int parent, string language)
+        {
+            List<NodoChildEntity> entity = await nodoChildRepo.Where(op => op.Parent == parent).ToListAsync();
+
+            if (entity == null)
+            {
+                EntityException entityException = new("No se encontraron registros");
+                throw entityException;
+            }
+
+            //BUSCAMOS AL PADRE
+            List<NodoChildResume> listResume = new List<NodoChildResume>();
+            foreach(NodoChildEntity nodo in entity)
+            {
+                if(language.ToUpper() == "EN")
+                {
+                    nodo.Title = numeros[(nodo.Id - 1)].Trim();
+                }
+
+                listResume.Add(new NodoChildResume(nodo));
+            }           
+
+            return listResume;
+        }
+
+        public async Task<NodoChildDTO> Create(NodoChildRequest.NodoChildRequestPost request, string language)
         {
             try
             {
@@ -84,6 +125,16 @@ namespace GraphService.NodoChild.Service
 
                 NodoChildDTO nodoChild = nodoChildRepo.FromSqlRaw(spInsert, parameters)
                                                         .Select(singleSelect).First();
+
+                NodoFatherEntity entityFather = await nodoFatherRepo.Where(op => op.Id == request.parent).FirstAsync();
+                NodoFatherDTO nodoFather = new NodoFatherDTO(entityFather);
+
+                nodoChild.MapNodoFather(nodoFather);
+
+
+                if (language.ToUpper() == "EN") {
+                    nodoChild.title = numeros[(nodoChild.id - 1)].Trim();
+                }
 
                 _cache.Set(nodoChild); 
 
@@ -100,7 +151,7 @@ namespace GraphService.NodoChild.Service
             }
         }
 
-        public NodoChildDTO Update(NodoChildRequest.NodoChildRequestPut request, int id)
+        public async Task<NodoChildDTO> Update(NodoChildRequest.NodoChildRequestPut request, int id, string language)
         {
             try
             {
@@ -108,6 +159,18 @@ namespace GraphService.NodoChild.Service
 
                 NodoChildDTO nodoChild = nodoChildRepo.FromSqlRaw(spUpdate, parameters)
                                                         .Select(singleSelect).First();
+
+                NodoFatherEntity entityFather = await nodoFatherRepo.Where(op => op.Id == request.parent).FirstAsync();
+                NodoFatherDTO nodoFather = new NodoFatherDTO(entityFather);
+
+                nodoChild.MapNodoFather(nodoFather);
+
+
+                if (language.ToUpper() == "EN")
+                {
+                    nodoChild.title = numeros[(nodoChild.id - 1)].Trim();
+                }
+
 
                 _cache.Update(nodoChild, op => op.id == id);
 

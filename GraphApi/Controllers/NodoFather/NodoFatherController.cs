@@ -1,5 +1,6 @@
 ﻿
 using Azure;
+using GraphService.NodoChild.Service;
 using GraphService.NodoFather.Models;
 using GraphService.NodoFather.Service;
 using GraphService.Response;
@@ -7,6 +8,7 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using System.ComponentModel.DataAnnotations;
 using System.Data.OleDb;
 using Utils.Exceptions;
 
@@ -18,16 +20,18 @@ namespace GraphApi.Controllers.NodoFather
     {
 
         public readonly INodoFatherService _service;
+        public readonly INodoChildService _serviceChild;
         public readonly ILogger<NodoFatherController> _logger;
 
-        public NodoFatherController(INodoFatherService nodoFatherService, ILogger<NodoFatherController> logger)
+        public NodoFatherController(INodoFatherService nodoFatherService, INodoChildService nodoChildService, ILogger<NodoFatherController> logger)
         {
+            _serviceChild = nodoChildService;
             _service = nodoFatherService;
             _logger = logger;
         }
 
         [HttpGet]
-        public async Task<ActionResult<ResponseGeneric>> Get([FromHeader(Name = "idioma")] string value)
+        public async Task<ActionResult<ResponseGeneric>> Get([Required][FromHeader(Name = "idioma")] string value)
         {
             List<ResponseGeneric> response = new List<ResponseGeneric>();
 
@@ -35,7 +39,7 @@ namespace GraphApi.Controllers.NodoFather
             {
                 List<NodoFatherDTO> nodoFathers = await _service.GetList(value);
 
-                foreach(NodoFatherDTO nodo in nodoFathers)
+                foreach (NodoFatherDTO nodo in nodoFathers)
                 {
                     ResponseGeneric generic = new ResponseGeneric();
                     generic.ParseNodoFather(nodo);
@@ -45,7 +49,7 @@ namespace GraphApi.Controllers.NodoFather
             }
             catch (EntityException entEx)
             {
-                
+
                 _logger.LogWarning($"Message: {entEx.Message}");
                 return BadRequest(new { message = entEx.Message });
             }
@@ -60,7 +64,8 @@ namespace GraphApi.Controllers.NodoFather
 
         [HttpGet("{id}")]
         public async Task<ActionResult<ResponseGeneric>> Get(
-            [FromHeader(Name = "idioma")] string value, 
+            [Required][FromHeader(Name = "idioma")] string value,
+            [FromQuery(Name = "child")] int valorChild,
             int id)
         {
             ResponseGeneric response = new ResponseGeneric();
@@ -68,6 +73,11 @@ namespace GraphApi.Controllers.NodoFather
             try
             {
                 NodoFatherDTO nodoFathers = await _service.Get(id, value);
+
+                if(valorChild != 0 || valorChild > 0)
+                {
+                    nodoFathers.listChilds = await _serviceChild.GetAllParent(id, value);
+                }
 
                 response.ParseNodoFather(nodoFathers);
 
@@ -88,7 +98,7 @@ namespace GraphApi.Controllers.NodoFather
 
 
         [HttpPost]        
-        public ActionResult<ResponseGeneric> Post([FromHeader(Name = "idioma")] string value)
+        public ActionResult<ResponseGeneric> Post([Required][FromHeader(Name = "idioma")] string value)
         {
             if (!ModelState.IsValid)
             {
@@ -125,7 +135,7 @@ namespace GraphApi.Controllers.NodoFather
         }
 
         [HttpPut("{id}")]
-        public ActionResult<ResponseGeneric> Put([FromHeader(Name = "idioma")] string value, [FromBody] NodoFatherRequest.NodoFatherRequestPut request, int id)
+        public ActionResult<ResponseGeneric> Put([Required][FromHeader(Name = "idioma")] string value, [FromBody] NodoFatherRequest.NodoFatherRequestPut request, int id)
         {
             if (!ModelState.IsValid)
             {

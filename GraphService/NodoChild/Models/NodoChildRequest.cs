@@ -10,15 +10,7 @@ namespace GraphService.NodoChild.Models
         public abstract class Base
         {
             [Required]
-            public int parent { get; set; }
-
-            [DescriptionValidations(maxLength: 150, required: true)]
-            public string title { get; set; }
-
-            protected SqlParameter GetTitleParameter()
-            {
-                return new SqlParameter("@title", title);
-            }
+            public int parent { get; set; }           
 
             protected SqlParameter GetParentParameter() {
                 return new SqlParameter("@parent", parent);
@@ -35,13 +27,11 @@ namespace GraphService.NodoChild.Models
             public (string spInsert, SqlParameter[] sqlParameters) MapToSqlParameters()
             {
                 string sql = $"SP_NODO_CHILD_INSERT  " +
-                                         $"@parent, " +
-                                         $"@title";
+                                         $"@parent";
 
                 SqlParameter[] parameters = new[]
                 {
-                    GetParentParameter(),
-                    GetTitleParameter()
+                    GetParentParameter()
                 };
 
                 return (sql, parameters);
@@ -49,7 +39,15 @@ namespace GraphService.NodoChild.Models
         }
 
         public sealed class NodoChildRequestPut : Base
-        {            
+        {
+
+            [DescriptionValidations(maxLength: 150, required: true)]
+            public string title { get; set; }
+
+            protected SqlParameter GetTitleParameter()
+            {
+                return new SqlParameter("@title", title);
+            }
 
             public (string spInsert, SqlParameter[] sqlParameters) MapToSqlParameters(int id)
             {

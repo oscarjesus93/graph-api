@@ -4,6 +4,7 @@ using GraphService.Response;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using System.ComponentModel.DataAnnotations;
 using Utils.Exceptions;
 
 namespace GraphApi.Controllers.NodoChild
@@ -25,13 +26,13 @@ namespace GraphApi.Controllers.NodoChild
         
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<ResponseNodoChild>> Get(int id)
+        public async Task<ActionResult<ResponseNodoChild>> Get([Required][FromHeader(Name = "idioma")] string idioma, int id)
         {
             ResponseNodoChild response = new ResponseNodoChild();
 
             try
             {
-                NodoChildDTO nodoChildDTO = await _service.Get(id);
+                NodoChildDTO nodoChildDTO = await _service.Get(id, idioma);
                 response.ParseNodoChild(nodoChildDTO);
             }
             catch (EntityException entEx)
@@ -49,13 +50,13 @@ namespace GraphApi.Controllers.NodoChild
         }
 
         [HttpGet]
-        public async Task<ActionResult<ResponseNodoChild>> GetAll()
+        public async Task<ActionResult<ResponseNodoChild>> GetAll([Required][FromHeader(Name = "idioma")] string idioma)
         {
             List<ResponseNodoChild> response = new List<ResponseNodoChild>();
 
             try
             {
-                List<NodoChildDTO> nodoChildDTOs= await _service.GetAll();
+                List<NodoChildDTO> nodoChildDTOs= await _service.GetAll(idioma);
                 foreach (NodoChildDTO item in nodoChildDTOs)
                 {
                     ResponseNodoChild responseNodo = new ResponseNodoChild();
@@ -78,7 +79,7 @@ namespace GraphApi.Controllers.NodoChild
         }
 
         [HttpPost]
-        public ActionResult<ResponseNodoChild> Post(NodoChildRequest.NodoChildRequestPost request)
+        public async Task<ActionResult<ResponseNodoChild>> Post([Required][FromHeader(Name = "idioma")] string idioma, NodoChildRequest.NodoChildRequestPost request)
         {
             if (!ModelState.IsValid)
             {
@@ -92,7 +93,7 @@ namespace GraphApi.Controllers.NodoChild
             try
             {
 
-                NodoChildDTO nodo = _service.Create(request);
+                NodoChildDTO nodo = await _service.Create(request, idioma);
                 response.ParseNodoChild(nodo);
 
             }
@@ -122,7 +123,7 @@ namespace GraphApi.Controllers.NodoChild
         }
 
         [HttpPut("{id}")]
-        public ActionResult<ResponseNodoChild> Put([FromBody] NodoChildRequest.NodoChildRequestPut request, int id)
+        public async Task<ActionResult<ResponseNodoChild>> Put([Required][FromHeader(Name = "idioma")] string idioma, [FromBody] NodoChildRequest.NodoChildRequestPut request, int id)
         {
             if (!ModelState.IsValid)
             {
@@ -136,7 +137,7 @@ namespace GraphApi.Controllers.NodoChild
             try
             {
 
-                NodoChildDTO nodo = _service.Update(request, id);
+                NodoChildDTO nodo = await _service.Update(request, id, idioma);
                 response.ParseNodoChild(nodo);
 
             }

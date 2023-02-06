@@ -24,7 +24,6 @@ namespace GraphApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
             strConnection = Configuration.GetConnectionString("BD").ToString() ?? "";
             services.AddDbContext<ConnectionContext>(opt => opt.UseSqlServer(strConnection));
             services.AddSwagger("Graph Service v1", "Graph Service", "v1");

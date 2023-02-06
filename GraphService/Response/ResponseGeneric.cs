@@ -1,5 +1,6 @@
 ﻿using GraphService.NodoChild.Models;
 using GraphService.NodoFather.Models;
+using GraphService.Resource;
 using Microsoft.EntityFrameworkCore.Query.Internal;
 
 namespace GraphService.Response
@@ -8,7 +9,7 @@ namespace GraphService.Response
     {
 
         public int id { get; set; }
-        public List<NodoChildDTO>  paternt { get; set; }
+        public List<NodoChildResume>  paternt { get; set; }
         public string title { get; set; }
         public DateTime? create_at { get; set; }     
 
@@ -18,7 +19,7 @@ namespace GraphService.Response
             id = nodo.id;
             title = nodo.title;
             create_at = nodo.created_at;
-            paternt = null;
+            paternt = nodo.listChilds;
         }
 
 

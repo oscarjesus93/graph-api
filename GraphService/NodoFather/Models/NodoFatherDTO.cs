@@ -1,4 +1,5 @@
 ﻿using Connection.NodoFatherEntities;
+using GraphService.Resource;
 using Utils.Interfaces.Map;
 
 namespace GraphService.NodoFather.Models
@@ -8,6 +9,8 @@ namespace GraphService.NodoFather.Models
         public int id { get; set; }
         public string title { get; set; }
         public DateTime? created_at { get; set; }
+
+        public List<NodoChildResume> listChilds { get; set; }
 
         public static readonly Func<NodoFatherEntity, NodoFatherDTO> singleSelect = entity => new NodoFatherDTO(entity);
 
